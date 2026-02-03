@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nbLM 風格指令實驗室 v3.4 (Anti-Deform)</title>
+    <title>nbLM 風格指令實驗室 v3.5 (Big Text)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -27,7 +27,7 @@
             <div class="flex justify-between h-16">
                 <div class="flex items-center gap-3">
                     <div class="bg-indigo-600 text-white px-3 py-1 rounded-lg font-bold text-xl tracking-tight">nbLM</div>
-                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令實驗室 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.4 Anti-Deform</span></h1>
+                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令實驗室 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.5 Big Text</span></h1>
                 </div>
             </div>
         </div>
@@ -102,7 +102,7 @@
                         <span id="copy-text">複製指令</span>
                     </button>
                 </div>
-                <textarea id="output" class="flex-1 bg-[#0f172a] text-slate-300 p-6 font-mono text-sm leading-relaxed focus:outline-none resize-none selection:bg-indigo-500 selection:text-white" readonly></textarea>
+                <textarea id="output" class="flex-1 bg-[#0f172a] text-slate-300 p-6 font-mono text-base leading-relaxed focus:outline-none resize-none selection:bg-indigo-500 selection:text-white" readonly></textarea>
                 <div class="bg-slate-800 px-4 py-2 text-[10px] text-slate-500 flex justify-between items-center border-t border-slate-700">
                     <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>Ready to Generate</span>
                     <span id="char-count" class="font-mono">0 chars</span>
@@ -308,7 +308,7 @@
             });
         }
 
-        // --- 3. 核心修正：Safe Mode Prompt (去除 ASCII / 強制 Markdown) ---
+        // --- 3. 核心修正：加入「防變形」與「大字體」邏輯 ---
         function generatePrompt() {
             return `# Task: Create a ${state.type.label}
 Please act as an expert Content Strategist. Your goal is to synthesize the provided source material into a clear ${state.type.label}.
@@ -323,17 +323,20 @@ Please act as an expert Content Strategist. Your goal is to synthesize the provi
 - **Instructions**: ${state.style.instr}
 - **Language**: Traditional Chinese (繁體中文) for content.
 
-## Visual Constraints (IMPORTANT)
+## Visual & Formatting Constraints (Anti-Deformation)
+- **BIG TEXT STRATEGY**: 
+  - Use **# H1** and **## H2** headings for ALL main concepts to ensure visibility.
+  - Avoid small text paragraphs. Use bullet points for readability.
 - **NO ASCII ART**: Do not attempt to draw charts or diagrams using text characters (like |, -, +). It will display incorrectly.
 - **Data Format**: Use standard Markdown Tables for any structured data.
-- **Visuals**: Instead of drawing, describe the visual concept in text (e.g., "A pie chart showing...") or provide the data points clearly.
+- **Short Lines**: Keep sentences concise to prevent wrapping issues on small screens.
 
 ## Output Instructions
 ${state.type.template}
 
 ## Constraints
 - **Source Based**: Strictly base your response on the provided sources in this notebook.
-- **Format**: Use clear Markdown formatting (Headings, Bullet points). 
+- **Format**: Use clear Markdown formatting. 
 
 Please proceed step-by-step.`;
         }
