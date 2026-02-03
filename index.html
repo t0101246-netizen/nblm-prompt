@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nbLM 風格指令實驗室 v3.0 (Fixed)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        /* 下拉選單美化 */
+        select { 
+            -webkit-appearance: none; 
+            -moz-appearance: none; 
+            appearance: none; 
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); 
+            background-position: right 0.5rem center; 
+            background-repeat: no-repeat; 
+            background-size: 1.5em 1.5em; 
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-600 text-white px-3 py-1 rounded-lg font-bold text-xl tracking-tight">nbLM</div>
+                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令實驗室 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.0 Stable</span></h1>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <div class="lg:col-span-5 space-y-6">
+            
+            <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 transition-colors">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-indigo-500"></span> 1. 選擇輸出格式 (Format)
+                </h2>
+                <div class="grid grid-cols-2 gap-3" id="type-container">
+                    </div>
+            </section>
+
+            <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 relative hover:border-indigo-300 transition-colors">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-pink-500"></span> 2. 定義風格濾鏡 (Style Filter)
+                </h2>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">風格流派 (Genre)</label>
+                    <div class="relative">
+                        <select id="category-select" class="w-full p-3 pl-4 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50 font-medium text-slate-700 transition cursor-pointer">
+                            </select>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">具體風格 (Specific Style)</label>
+                    <div class="relative">
+                        <select id="style-select" class="w-full p-3 pl-4 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white font-medium text-slate-900 shadow-sm transition cursor-pointer">
+                            </select>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-indigo-50 rounded-lg border border-indigo-100 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-2 opacity-10 text-indigo-900">
+                        <svg class="w-16 h-16 transform rotate-12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="text-indigo-900 font-bold text-sm mb-1 flex items-center gap-2">
+                            <span id="style-name-display">載入中...</span>
+                        </div>
+                        <p class="text-indigo-700 text-xs leading-relaxed" id="style-desc-display">...</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 transition-colors">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 3. 設定目標受眾 (Target)
+                </h2>
+                <div class="flex flex-wrap gap-2" id="audience-container">
+                    </div>
+            </section>
+
+        </div>
+
+        <div class="lg:col-span-7 flex flex-col h-[calc(100vh-8rem)] sticky top-24">
+            <div class="bg-slate-900 rounded-xl shadow-2xl border border-slate-700 flex flex-col h-full overflow-hidden transform transition-all">
+                <div class="bg-slate-800 px-4 py-3 flex justify-between items-center border-b border-slate-700">
+                    <div class="flex items-center gap-2">
+                        <div class="flex gap-1.5">
+                            <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                        </div>
+                        <span class="ml-3 text-slate-400 text-xs font-mono opacity-70">prompt_generator.md</span>
+                    </div>
+                    <button id="copy-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 shadow-lg shadow-indigo-500/20 active:scale-95">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        <span id="copy-text">複製指令</span>
+                    </button>
+                </div>
+                
+                <textarea id="output" class="flex-1 bg-[#0f172a] text-slate-300 p-6 font-mono text-sm leading-relaxed focus:outline-none resize-none selection:bg-indigo-500 selection:text-white" readonly></textarea>
+                
+                <div class="bg-slate-800 px-4 py-2 text-[10px] text-slate-500 flex justify-between items-center border-t border-slate-700">
+                    <span class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                        Ready to Generate
+                    </span>
+                    <span id="char-count" class="font-mono">0 chars</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- 1. 完整資料庫 (47 Styles) ---
+        const styleDatabase = {
+            "business": {
+                label: "💼 商業與戰略 (Business)",
+                styles: [
+                    { id: "mckinsey", label: "麥肯錫顧問 (McKinsey)", desc: "MECE原則、極度客觀、戰略導向", instr: "Use MECE (Mutually Exclusive, Collectively Exhaustive) principle. Tone: Highly professional, objective, and executive. Use phrases like 'Strategic Implications', 'Key Drivers', and 'Actionable Insights'." },
+                    { id: "vc", label: "矽谷創投 (VC)", desc: "重視成長、ROI、市場規模", instr: "Focus on 'Scalability', 'Moat', 'Traction', and 'ROI'. Tone: Fast-paced, sharp, assessing growth potential. Highlight 'Unfair Advantages' and 'Market Size'." },
+                    { id: "legal", label: "法律合規 (Legal)", desc: "嚴謹、無歧義、定義清晰", instr: "Tone: Rigorous, unambiguous, and formal. Use precise definitions. Structure arguments with 'Premise', 'Evidence', and 'Conclusion'. Avoid vague language." },
+                    { id: "agile", label: "敏捷產品經理 (PM)", desc: "User Story、痛點、驗收標準", instr: "Focus on User Stories ('As a user...'). Define 'Acceptance Criteria'. Prioritize 'Pain Points' and 'Solutions'. Tone: Iterative, user-centric, and practical." },
+                    { id: "crisis", label: "危機公關 (Crisis Comms)", desc: "誠懇、事實澄清、後續行動", instr: "Tone: Empathetic but controlled. Focus on 'Fact Clarification', 'Immediate Actions', and 'Future Prevention'. Reassure stakeholders without over-promising." }
+                ]
+            },
+            "visual": {
+                label: "🎨 視覺與設計思維 (Design)",
+                styles: [
+                    { id: "cyberpunk", label: "賽博龐克 (Cyberpunk)", desc: "高科技低生活、霓虹、破壞式", instr: "Tone: High-tech, disruptive, edgy. Use metaphors of 'Neon', 'Data streams', and 'System override'. Highlight contrasts between old and new." },
+                    { id: "swiss", label: "瑞士極簡 (Swiss Style)", desc: "留白、網格、核心觀點", instr: "Tone: Minimalist, clean, structured. Maximize 'White Space' in the text layout. Remove all fluff. Focus on high signal-to-noise ratio." },
+                    { id: "sketch", label: "手繪筆記 (Sketchnote)", desc: "親切、比喻、視覺化描述", instr: "Tone: Warm, approachable, hand-crafted feel. Use visual metaphors (e.g., 'Picture this as...'). Suggest doodles or icons to represent data." },
+                    { id: "natgeo", label: "國家地理 (NatGeo)", desc: "宏大敘事、人文與自然", instr: "Tone: Narrative, observant, grand. Combine hard data with human stories. Describe the 'Landscape' of the information vividly." },
+                    { id: "blueprint", label: "藍圖工程 (Blueprint)", desc: "結構、尺寸、精確度", instr: "Tone: Precise, architectural. Use terms like 'Foundation', 'Framework', 'Load-bearing'. Focus on the structural integrity of the ideas." }
+                ]
+            },
+            "academic": {
+                label: "🎓 學術與教育 (Academic)",
+                styles: [
+                    { id: "ivy", label: "常春藤教授 (Ivy League)", desc: "引用嚴謹、深度批判", instr: "Tone: Scholarly, rigorous, critical. Use complex sentence structures. Require citations for claims. Analyze from multiple theoretical perspectives." },
+                    { id: "eli5", label: "費曼技巧 (ELI5)", desc: "極簡比喻、無術語", instr: "Explain Like I'm 5. Use simple analogies (Lego, Pizza, Cars). BANNED: Jargon and complex acronyms. Focus on the core 'Why'." },
+                    { id: "socratic", label: "蘇格拉底 (Socratic)", desc: "提問引導、反思", instr: "Do not give direct answers. Use guiding questions to lead the reader to the conclusion. Foster critical thinking and self-discovery." },
+                    { id: "debater", label: "辯論選手 (Debater)", desc: "正反並陳、邏輯攻防", instr: "Structure: Argument, Rebuttal, Evidence. Present 'Pros' and 'Cons' sharply. Focus on logical fallacies and strong counter-arguments." },
+                    { id: "history", label: "歷史說書人 (Historian)", desc: "時間軸、因果、故事性", instr: "Narrate chronologically. Emphasize 'Cause and Effect'. Place data in a historical context. Tell the 'Story' behind the numbers." }
+                ]
+            },
+            "media": {
+                label: "📢 媒體與傳播 (Media)",
+                styles: [
+                    { id: "ted", label: "TED 演講 (TED Talk)", desc: "啟發性、個人故事、金句", instr: "Structure: The Hook -> The Struggle -> The Epiphany. Tone: Inspiring, passionate. Include 'Quotable Moments' and a strong 'Call to Adventure'." },
+                    { id: "techcrunch", label: "科技媒體 (TechCrunch)", desc: "趨勢、商業邏輯、Geeky", instr: "Focus on 'Disruption', 'Tech Stack', and 'Market fit'. Tone: Modern, geeky, analytical. specific to the tech industry ecosystem." },
+                    { id: "viral", label: "病毒行銷 (Viral)", desc: "情緒渲染、驚嘆號", instr: "Use 'Clickbait' style headers. High emotional engagement. Short, punchy sentences. Use formatting like BOLD CAPS for emphasis." },
+                    { id: "noir", label: "黑色偵探 (Noir)", desc: "冷硬、獨白、調查感", instr: "Tone: Cynical, gritty, monochromatic. Write like a detective's monologue. 'It was a rainy night when the data came in...' Uncover the 'Truth'." },
+                    { id: "podcast", label: "Podcast 腳本", desc: "口語化、對話感", instr: "Format as a script. Include cues like [Music Fades In], [Laughter]. Tone: Conversational, casual, engaging audio-first storytelling." }
+                ]
+            },
+            "data": {
+                label: "📊 數據與邏輯 (Data)",
+                styles: [
+                    { id: "json", label: "JSON 結構", desc: "程式碼、Key-Value", instr: "Output strictly in JSON format. Use clear Key-Value pairs. No conversational filler. Ideal for data parsing." },
+                    { id: "swot", label: "SWOT 分析", desc: "優劣勢矩陣", instr: "Strictly categorize into: Strengths (Internal), Weaknesses (Internal), Opportunities (External), Threats (External). Bullet points only." },
+                    { id: "gamestats", label: "遊戲數值 (Game Stats)", desc: "屬性化、等級制", instr: "Quantify data as 'Attributes' (e.g., Agility, Intelligence). Assign 'Levels' or 'Ranks' to concepts. Use RPG UI terminology." },
+                    { id: "checklist", label: "清單控 (Checklist)", desc: "SOP、複選框", instr: "Format as a checklist [ ]. Break down complex tasks into single steps. Focus on 'Actionability'. No theory, just doing." },
+                    { id: "matrix", label: "比較矩陣 (Matrix)", desc: "橫縱軸對比", instr: "Create a Markdown table. Columns: Competitors/Options. Rows: Features/Specs. Highlight differences clearly." }
+                ]
+            },
+            "game": {
+                label: "🎮 遊戲與互動 (Gaming)",
+                styles: [
+                    { id: "dm", label: "地下城主 (D&D DM)", desc: "冒險敘事、第二人稱", instr: "Role: Dungeon Master. Describe challenges as 'Monsters'. Describe resources as 'Loot'. Use second-person ('You enter the room...')." },
+                    { id: "rpg_item", label: "RPG 裝備 (Item Desc)", desc: "傳奇物品說明", instr: "Format as a Legendary Item tooltip. Include: Name, Type, Stats, Passive Effects, and Lore Text (flavor text)." },
+                    { id: "cyoa", label: "互動小說 (CYOA)", desc: "提供選項 A/B/C", instr: "Do not finish the story. Present a scenario based on data, then offer 3 distinct choices (Option A, B, C) leading to different outcomes." },
+                    { id: "patch", label: "更新公告 (Patch Notes)", desc: "Buff/Nerf、修復", instr: "Use terms: 'Buffed', 'Nerfed', 'Bug Fixes', 'QoL Improvements'. Tone: Dev-blog style, concise and technical." },
+                    { id: "esports", label: "電競賽評 (Caster)", desc: "高能量、關鍵Play", instr: "Tone: High energy, shouting, hype! Highlight 'MVP' moments and 'Critical Plays' in the data. Fast-paced delivery." }
+                ]
+            },
+            "metaphor": {
+                label: "🧩 隱喻與遷移 (Metaphor)",
+                styles: [
+                    { id: "chef", label: "米其林主廚 (Chef)", desc: "食譜、食材、烹飪", instr: "Metaphor: Cooking. Data = Ingredients. Process = Recipe. Outcome = Dish. Use sensory words (Taste, Smell, Texture)." },
+                    { id: "medical", label: "臨床診斷 (Medical)", desc: "症狀、處方、預後", instr: "Format: Symptoms (Current State), Diagnosis (Root Cause), Prescription (Action), Prognosis (Future). Tone: Sterile, clinical." },
+                    { id: "blueprint_arch", label: "建築師 (Architect)", desc: "空間、動線、材質", instr: "Focus on 'Space', 'Flow', and 'Materials'. Describe the information architecture as a physical building." },
+                    { id: "military", label: "軍事簡報 (Military)", desc: "任務、執行、無廢話", instr: "Format: SITUATION, MISSION, EXECUTION. Tone: Commanding, direct. Use NATO phonetic alphabet if applicable. Zero fluff." },
+                    { id: "script", label: "電影劇本 (Screenplay)", desc: "場景、動作、對白", instr: "Format: EXT. LOCATION - DAY. Describe action lines and dialogue. Think cinematically." }
+                ]
+            },
+            "persona": {
+                label: "🎭 角色與語氣 (Persona)",
+                styles: [
+                    { id: "victorian", label: "維多利亞紳士", desc: "優雅、冗長、古典", instr: "Tone: 19th Century Aristocrat. Use archaic words ('My dearest', 'Indeed', 'Preposterous'). Be polite but excessively verbose." },
+                    { id: "genz", label: "Z世代 (Gen Z)", desc: "流行語、Emoji、短句", instr: "Tone: Internet slang (no cap, bet, sus). Use lowercase. Use emojis liberally 💀🔥. Keep it short and chaotic." }
+                ]
+            },
+            "visual_gen": {
+                label: "👁️ 視覺生成專用 (Prompting)",
+                styles: [
+                    { id: "wes", label: "魏斯安德森 (Wes Anderson)", desc: "對稱、粉嫩色、置中", instr: "Visual Description: Symmetrical composition, pastel color palette, flat lay, quirky objects, centered framing." },
+                    { id: "ukiyo", label: "浮世繪 (Ukiyo-e)", desc: "版畫、線條、海浪", instr: "Visual Description: Woodblock print style, bold outlines, flat perspective, nature motifs (waves, mountains)." },
+                    { id: "pixel", label: "像素藝術 (8-bit)", desc: "復古遊戲、低解析", instr: "Visual Description: Low resolution, limited color palette, blocky shapes, retro video game aesthetic." },
+                    { id: "dataism", label: "數據主義 (Dataism)", desc: "代碼流、駭客任務", instr: "Visual Description: Glowing green code, digital rain, network nodes, dark background, abstract data visualization." },
+                    { id: "paper", label: "剪紙藝術 (Paper Cut)", desc: "層次、陰影、質感", instr: "Visual Description: Layered colored paper, deep shadows, 3D depth, physical texture, craft aesthetic." }
+                ]
+            },
+            "constraint": {
+                label: "📐 結構限制 (Structural)",
+                styles: [
+                    { id: "haiku", label: "俳句 (Haiku)", desc: "5-7-5 音節", instr: "Strict Constraint: Summarize key points using only Haiku structure (5-7-5 syllables). Abstract and poetic." },
+                    { id: "amazon", label: "亞馬遜六頁 (6-Pager)", desc: "純文字敘事、無條列", instr: "Strict Constraint: Continuous narrative text only. NO bullet points. Focus on clear, full sentences and logical flow." },
+                    { id: "flashcard", label: "記憶卡片 (Flashcards)", desc: "問與答", instr: "Format: Q: [Question] \n A: [Answer]. optimized for spaced repetition learning." },
+                    { id: "thread", label: "推特串 (Twitter)", desc: "10條推文、280字", instr: "Format: A thread of 10 tweets. Each under 280 chars. Number them 1/10. Start with a Hook, end with a CTA." },
+                    { id: "faq", label: "常見問答 (FAQ)", desc: "預判問題、同理回答", instr: "Anticipate user confusion. Format as 'User Asks' and 'Expert Answers'. Focus on resolving doubts." }
+                ]
+            }
+        };
+
+        const types = [
+            { id: 'report', label: '深度報告 (Report)', icon: '📝', template: "Structure with H1/H2. Include Executive Summary, Analysis, and Recommendations." },
+            { id: 'infographic', label: '資訊圖表 (Infographic)', icon: '📊', template: "Describe visual layout for charts. Provide: [Visual Concept], [Data Points], [Caption]." },
+            { id: 'slide', label: '簡報大綱 (Slides)', icon: '📽️', template: "Outline 10-15 slides. For each: Title, Visual Element, and Speaker Notes." },
+            { id: 'table', label: '資料表 (Table)', icon: '📅', template: "Comprehensive Markdown Table. Columns for comparison attributes." }
+        ];
+
+        const audiences = [
+            { id: 'general', label: '一般大眾', focus: 'Simplicity & Engagement' },
+            { id: 'executive', label: '高階主管', focus: 'ROI & Strategy' },
+            { id: 'technical', label: '技術專家', focus: 'Specs & Implementation' },
+            { id: 'student', label: '學生/初學者', focus: 'Learning & Fundamentals' }
+        ];
+
+        // --- 2. 狀態管理 (State) ---
+        let state = {
+            type: types[0],
+            category: 'business', // Default Category
+            style: styleDatabase['business'].styles[0], // Default Style
+            audience: audiences[0]
+        };
+
+        // --- 3. DOM Elements ---
+        const els = {
+            typeContainer: document.getElementById('type-container'),
+            catSelect: document.getElementById('category-select'),
+            styleSelect: document.getElementById('style-select'),
+            styleName: document.getElementById('style-name-display'),
+            styleDesc: document.getElementById('style-desc-display'),
+            audContainer: document.getElementById('audience-container'),
+            output: document.getElementById('output'),
+            charCount: document.getElementById('char-count')
+        };
+
+        // --- 4. Render Logic ---
+        function renderTypes() {
+            els.typeContainer.innerHTML = '';
+            types.forEach(t => {
+                const btn = document.createElement('button');
+                const isActive = state.type.id === t.id;
+                btn.className = `p-3 rounded-lg border text-left flex items-center gap-3 transition-all ${isActive ? 'border-indigo-600 bg-indigo-50 ring-1 ring-indigo-600 shadow-sm' : 'border-slate-200 hover:bg-slate-50'}`;
+                btn.innerHTML = `<span class="text-xl">${t.icon}</span><span class="font-medium text-sm text-slate-700">${t.label}</span>`;
+                btn.onclick = () => { state.type = t; renderTypes(); updatePreview(); };
+                els.typeContainer.appendChild(btn);
+            });
+        }
+
+        function renderCategories() {
+            els.catSelect.innerHTML = '';
+            Object.keys(styleDatabase).forEach(key => {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.textContent = styleDatabase[key].label;
+                els.catSelect.appendChild(opt);
+            });
+            
+            // Set initial value
+            els.catSelect.value = state.category;
+
+            // Event Listener for Category Change
+            els.catSelect.onchange = (e) => {
+                const newCat = e.target.value;
+                state.category = newCat;
+                // 重置 Style 為該分類下的第一個
+                state.style = styleDatabase[newCat].styles[0];
+                renderStyles(); // Re-render secondary dropdown
+                updatePreview();
+            };
+        }
+
+        function renderStyles() {
+            els.styleSelect.innerHTML = '';
+            const stylesInCat = styleDatabase[state.category].styles;
+            
+            stylesInCat.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.textContent = s.label;
+                els.styleSelect.appendChild(opt);
+            });
+
+            // Update Selected Value
+            els.styleSelect.value = state.style.id;
+            
+            // Update Card Info
+            els.styleName.textContent = state.style.label;
+            els.styleDesc.textContent = state.style.desc;
+
+            // Event Listener for Style Change
+            els.styleSelect.onchange = (e) => {
+                const selectedId = e.target.value;
+                state.style = stylesInCat.find(s => s.id === selectedId);
+                els.styleName.textContent = state.style.label;
+                els.styleDesc.textContent = state.style.desc;
+                updatePreview();
+            };
+        }
+
+        function renderAudiences() {
+            els.audContainer.innerHTML = '';
+            audiences.forEach(a => {
+                const btn = document.createElement('button');
+                const isActive = state.audience.id === a.id;
+                btn.className = `px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${isActive ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-400'}`;
+                btn.textContent = a.label;
+                btn.onclick = () => { state.audience = a; renderAudiences(); updatePreview(); };
+                els.audContainer.appendChild(btn);
+            });
+        }
+
+        // --- 5. Core Logic ---
+        function generatePrompt() {
+            return `<task_definition>
+You are an expert Content Strategist & Data Synthesizer.
+Your goal is to transform the provided source material into a **${state.type.label}**.
+</task_definition>
+
+<audience_profile>
+- Target Audience: ${state.audience.label}
+- Key Focus: ${state.audience.focus}
+</audience_profile>
+
+<style_guide>
+- **Style Archetype**: ${state.style.label}
+- **Tone/Voice**: ${state.style.desc}
+- **Specific Instruction**: ${state.style.instr}
+- **Language**: Traditional Chinese (繁體中文) for main content, English for technical terms if needed.
+</style_guide>
+
+<output_format>
+Type: ${state.type.label}
+Constraint: Markdown Only.
+Instructions:
+${state.type.template}
+</output_format>
+
+<core_constraints>
+1. **Source Material Only**: You must strictly base your response on the uploaded documents/sources in this notebook. Do not hallucinate external information.
+2. **Formatting**: Use clear hierarchy (H1, H2, bullet points).
+3. **Completeness**: Cover all relevant data points from the source that match the user's request.
+</core_constraints>
+
+Please think step-by-step and generate the response now.`;
+        }
+
+        function updatePreview() {
+            const txt = generatePrompt();
+            els.output.value = txt;
+            els.charCount.textContent = `${txt.length} chars`;
+        }
+
+        // --- 6. Init ---
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            els.output.select();
+            navigator.clipboard.writeText(els.output.value).then(() => {
+                const span = document.getElementById('copy-text');
+                const old = span.textContent;
+                span.textContent = "已複製！";
+                setTimeout(() => span.textContent = old, 2000);
+            });
+        });
+
+        // Start App
+        renderTypes();
+        renderCategories();
+        renderStyles(); // Ensure initial render
+        renderAudiences();
+        updatePreview();
+    </script>
+</body>
+</html>
