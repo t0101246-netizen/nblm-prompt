@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nbLM 風格指令實驗室 v3.5 (Big Text)</title>
+    <title>nbLM 風格指令實驗室 v3.6 (Smart Split)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -27,7 +27,7 @@
             <div class="flex justify-between h-16">
                 <div class="flex items-center gap-3">
                     <div class="bg-indigo-600 text-white px-3 py-1 rounded-lg font-bold text-xl tracking-tight">nbLM</div>
-                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令實驗室 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.5 Big Text</span></h1>
+                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令實驗室 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.6 Smart Split</span></h1>
                 </div>
             </div>
         </div>
@@ -98,7 +98,7 @@
                         <span class="ml-3 text-slate-400 text-xs font-mono opacity-70">prompt_generator.md</span>
                     </div>
                     <button id="copy-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 shadow-lg shadow-indigo-500/20 active:scale-95">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                         <span id="copy-text">複製指令</span>
                     </button>
                 </div>
@@ -308,8 +308,18 @@
             });
         }
 
-        // --- 3. 核心修正：加入「防變形」與「大字體」邏輯 ---
+        // --- 3. 核心修正：v3.6 加入「長度分流 (Smart Split)」邏輯 ---
         function generatePrompt() {
+            // 定義針對「維多利亞」這類冗長風格的特別限制
+            let formatOverrides = "";
+            if (state.type.id === 'slide') {
+                formatOverrides = `
+## Length Constraints (CRITICAL OVERRIDE)
+- **Slide Content (Visuals)**: You MUST be concise here. Max 10-15 words per bullet point. No paragraphs.
+- **Speaker Notes (Voice)**: Put all the "Style" and "Verbosity" here. If the style is Victorian, write the script for a Victorian gentleman in the notes, but keep the slide clean.
+`;
+            }
+
             return `# Task: Create a ${state.type.label}
 Please act as an expert Content Strategist. Your goal is to synthesize the provided source material into a clear ${state.type.label}.
 
@@ -323,13 +333,12 @@ Please act as an expert Content Strategist. Your goal is to synthesize the provi
 - **Instructions**: ${state.style.instr}
 - **Language**: Traditional Chinese (繁體中文) for content.
 
-## Visual & Formatting Constraints (Anti-Deformation)
-- **BIG TEXT STRATEGY**: 
-  - Use **# H1** and **## H2** headings for ALL main concepts to ensure visibility.
-  - Avoid small text paragraphs. Use bullet points for readability.
-- **NO ASCII ART**: Do not attempt to draw charts or diagrams using text characters (like |, -, +). It will display incorrectly.
-- **Data Format**: Use standard Markdown Tables for any structured data.
-- **Short Lines**: Keep sentences concise to prevent wrapping issues on small screens.
+${formatOverrides}
+
+## Visual & Formatting Constraints
+- **BIG TEXT STRATEGY**: Use **# H1** and **## H2** headings.
+- **NO ASCII ART**: Do not attempt to draw charts.
+- **Data Format**: Use standard Markdown Tables.
 
 ## Output Instructions
 ${state.type.template}
