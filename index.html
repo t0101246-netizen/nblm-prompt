@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nbLM 風格指令實驗室 v3.3 (Safe Mode)</title>
+    <title>nbLM 風格指令實驗室 v3.4 (Anti-Deform)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -27,7 +27,7 @@
             <div class="flex justify-between h-16">
                 <div class="flex items-center gap-3">
                     <div class="bg-indigo-600 text-white px-3 py-1 rounded-lg font-bold text-xl tracking-tight">nbLM</div>
-                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令實驗室 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.3 Safe Mode</span></h1>
+                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令實驗室 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.4 Anti-Deform</span></h1>
                 </div>
             </div>
         </div>
@@ -217,7 +217,7 @@
         // --- 2. 格式設定 (Types) ---
         const types = [
             { id: 'infographic', label: '資訊圖表 (Infographic)', icon: '📊', template: "Describe visual layout for charts. Provide: [Visual Concept], [Data Points], [Caption]." },
-            { id: 'slide', label: '簡報大綱 (Slides)', icon: '📽️', template: "Outline 10-15 slides. For each: Title, Visual Element, and Speaker Notes." }
+            { id: 'slide', label: '簡報大綱 (Slides)', icon: '📽️', template: "Outline 10-15 slides. For each: Title, Bullet Points, and Speaker Notes." }
         ];
 
         const audiences = [
@@ -308,8 +308,7 @@
             });
         }
 
-        // --- 3. 核心修正：將 XML 改為 Markdown (Safe Mode) ---
-        // 這一段邏輯已更新，避免被 NotebookLM 拒絕
+        // --- 3. 核心修正：Safe Mode Prompt (去除 ASCII / 強制 Markdown) ---
         function generatePrompt() {
             return `# Task: Create a ${state.type.label}
 Please act as an expert Content Strategist. Your goal is to synthesize the provided source material into a clear ${state.type.label}.
@@ -324,12 +323,17 @@ Please act as an expert Content Strategist. Your goal is to synthesize the provi
 - **Instructions**: ${state.style.instr}
 - **Language**: Traditional Chinese (繁體中文) for content.
 
+## Visual Constraints (IMPORTANT)
+- **NO ASCII ART**: Do not attempt to draw charts or diagrams using text characters (like |, -, +). It will display incorrectly.
+- **Data Format**: Use standard Markdown Tables for any structured data.
+- **Visuals**: Instead of drawing, describe the visual concept in text (e.g., "A pie chart showing...") or provide the data points clearly.
+
 ## Output Instructions
 ${state.type.template}
 
 ## Constraints
 - **Source Based**: Strictly base your response on the provided sources in this notebook.
-- **Format**: Use clear Markdown formatting (Headings, Bullet points). Do not output code blocks unless requested.
+- **Format**: Use clear Markdown formatting (Headings, Bullet points). 
 
 Please proceed step-by-step.`;
         }
