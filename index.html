@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nbLM 風格指令實驗室 v3.1 (Lite)</title>
+    <title>nbLM 風格指令實驗室 v3.3 (Safe Mode)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -27,7 +27,7 @@
             <div class="flex justify-between h-16">
                 <div class="flex items-center gap-3">
                     <div class="bg-indigo-600 text-white px-3 py-1 rounded-lg font-bold text-xl tracking-tight">nbLM</div>
-                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令實驗室 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.1 Lite</span></h1>
+                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令實驗室 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.3 Safe Mode</span></h1>
                 </div>
             </div>
         </div>
@@ -214,7 +214,7 @@
             }
         };
 
-        // --- 2. 格式設定 (Types) - 僅保留 Infographic 與 Slide ---
+        // --- 2. 格式設定 (Types) ---
         const types = [
             { id: 'infographic', label: '資訊圖表 (Infographic)', icon: '📊', template: "Describe visual layout for charts. Provide: [Visual Concept], [Data Points], [Caption]." },
             { id: 'slide', label: '簡報大綱 (Slides)', icon: '📽️', template: "Outline 10-15 slides. For each: Title, Visual Element, and Speaker Notes." }
@@ -308,38 +308,36 @@
             });
         }
 
+        // --- 3. 核心修正：將 XML 改為 Markdown (Safe Mode) ---
+        // 這一段邏輯已更新，避免被 NotebookLM 拒絕
         function generatePrompt() {
-            return `<task_definition>
-You are an expert Content Strategist & Data Synthesizer.
-Your goal is to transform the provided source material into a **${state.type.label}**.
-</task_definition>
+            return `# Task: Create a ${state.type.label}
+Please act as an expert Content Strategist. Your goal is to synthesize the provided source material into a clear ${state.type.label}.
 
-<audience_profile>
-- Target Audience: ${state.audience.label}
-- Key Focus: ${state.audience.focus}
-</audience_profile>
+## Target Audience
+- Who: ${state.audience.label}
+- Focus: ${state.audience.focus}
 
-<style_guide>
-- **Style Archetype**: ${state.style.label}
-- **Tone/Voice**: ${state.style.desc}
-- **Specific Instruction**: ${state.style.instr}
-- **Language**: Traditional Chinese (繁體中文) for main content, English for technical terms if needed.
-</style_guide>
+## Style Guidelines
+- **Style**: ${state.style.label}
+- **Tone**: ${state.style.desc}
+- **Instructions**: ${state.style.instr}
+- **Language**: Traditional Chinese (繁體中文) for content.
 
-<output_format>
-Type: ${state.type.label}
-Constraint: Markdown Only.
-Instructions:
+## Output Instructions
 ${state.type.template}
-</output_format>
 
-<core_constraints>
-1. **Source Material Only**: You must strictly base your response on the uploaded documents/sources in this notebook. Do not hallucinate external information.
-2. **Formatting**: Use clear hierarchy (H1, H2, bullet points).
-3. **Completeness**: Cover all relevant data points from the source that match the user's request.
-</core_constraints>
+## Constraints
+- **Source Based**: Strictly base your response on the provided sources in this notebook.
+- **Format**: Use clear Markdown formatting (Headings, Bullet points). Do not output code blocks unless requested.
 
-Please think step-by-step and generate the response now.`;
+Please proceed step-by-step.`;
+        }
+
+        function updatePreview() {
+            const txt = generatePrompt();
+            els.output.value = txt;
+            els.charCount.textContent = `${txt.length} chars`;
         }
 
         document.getElementById('copy-btn').addEventListener('click', () => {
