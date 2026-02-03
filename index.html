@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nbLM 風格指令實驗室 v3.0 (Fixed)</title>
+    <title>nbLM 風格指令實驗室 v3.1 (Lite)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        /* 下拉選單美化 */
         select { 
             -webkit-appearance: none; 
             -moz-appearance: none; 
@@ -28,7 +27,7 @@
             <div class="flex justify-between h-16">
                 <div class="flex items-center gap-3">
                     <div class="bg-indigo-600 text-white px-3 py-1 rounded-lg font-bold text-xl tracking-tight">nbLM</div>
-                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令實驗室 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.0 Stable</span></h1>
+                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令實驗室 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.1 Lite</span></h1>
                 </div>
             </div>
         </div>
@@ -68,9 +67,6 @@
                 </div>
 
                 <div class="p-4 bg-indigo-50 rounded-lg border border-indigo-100 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 p-2 opacity-10 text-indigo-900">
-                        <svg class="w-16 h-16 transform rotate-12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    </div>
                     <div class="relative z-10">
                         <div class="text-indigo-900 font-bold text-sm mb-1 flex items-center gap-2">
                             <span id="style-name-display">載入中...</span>
@@ -106,14 +102,9 @@
                         <span id="copy-text">複製指令</span>
                     </button>
                 </div>
-                
                 <textarea id="output" class="flex-1 bg-[#0f172a] text-slate-300 p-6 font-mono text-sm leading-relaxed focus:outline-none resize-none selection:bg-indigo-500 selection:text-white" readonly></textarea>
-                
                 <div class="bg-slate-800 px-4 py-2 text-[10px] text-slate-500 flex justify-between items-center border-t border-slate-700">
-                    <span class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                        Ready to Generate
-                    </span>
+                    <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>Ready to Generate</span>
                     <span id="char-count" class="font-mono">0 chars</span>
                 </div>
             </div>
@@ -223,11 +214,10 @@
             }
         };
 
+        // --- 2. 格式設定 (Types) - 僅保留 Infographic 與 Slide ---
         const types = [
-            { id: 'report', label: '深度報告 (Report)', icon: '📝', template: "Structure with H1/H2. Include Executive Summary, Analysis, and Recommendations." },
             { id: 'infographic', label: '資訊圖表 (Infographic)', icon: '📊', template: "Describe visual layout for charts. Provide: [Visual Concept], [Data Points], [Caption]." },
-            { id: 'slide', label: '簡報大綱 (Slides)', icon: '📽️', template: "Outline 10-15 slides. For each: Title, Visual Element, and Speaker Notes." },
-            { id: 'table', label: '資料表 (Table)', icon: '📅', template: "Comprehensive Markdown Table. Columns for comparison attributes." }
+            { id: 'slide', label: '簡報大綱 (Slides)', icon: '📽️', template: "Outline 10-15 slides. For each: Title, Visual Element, and Speaker Notes." }
         ];
 
         const audiences = [
@@ -237,15 +227,13 @@
             { id: 'student', label: '學生/初學者', focus: 'Learning & Fundamentals' }
         ];
 
-        // --- 2. 狀態管理 (State) ---
         let state = {
             type: types[0],
-            category: 'business', // Default Category
-            style: styleDatabase['business'].styles[0], // Default Style
+            category: 'business',
+            style: styleDatabase['business'].styles[0],
             audience: audiences[0]
         };
 
-        // --- 3. DOM Elements ---
         const els = {
             typeContainer: document.getElementById('type-container'),
             catSelect: document.getElementById('category-select'),
@@ -257,7 +245,6 @@
             charCount: document.getElementById('char-count')
         };
 
-        // --- 4. Render Logic ---
         function renderTypes() {
             els.typeContainer.innerHTML = '';
             types.forEach(t => {
@@ -278,17 +265,12 @@
                 opt.textContent = styleDatabase[key].label;
                 els.catSelect.appendChild(opt);
             });
-            
-            // Set initial value
             els.catSelect.value = state.category;
-
-            // Event Listener for Category Change
             els.catSelect.onchange = (e) => {
                 const newCat = e.target.value;
                 state.category = newCat;
-                // 重置 Style 為該分類下的第一個
                 state.style = styleDatabase[newCat].styles[0];
-                renderStyles(); // Re-render secondary dropdown
+                renderStyles();
                 updatePreview();
             };
         }
@@ -296,22 +278,15 @@
         function renderStyles() {
             els.styleSelect.innerHTML = '';
             const stylesInCat = styleDatabase[state.category].styles;
-            
             stylesInCat.forEach(s => {
                 const opt = document.createElement('option');
                 opt.value = s.id;
                 opt.textContent = s.label;
                 els.styleSelect.appendChild(opt);
             });
-
-            // Update Selected Value
             els.styleSelect.value = state.style.id;
-            
-            // Update Card Info
             els.styleName.textContent = state.style.label;
             els.styleDesc.textContent = state.style.desc;
-
-            // Event Listener for Style Change
             els.styleSelect.onchange = (e) => {
                 const selectedId = e.target.value;
                 state.style = stylesInCat.find(s => s.id === selectedId);
@@ -333,7 +308,6 @@
             });
         }
 
-        // --- 5. Core Logic ---
         function generatePrompt() {
             return `<task_definition>
 You are an expert Content Strategist & Data Synthesizer.
@@ -368,13 +342,6 @@ ${state.type.template}
 Please think step-by-step and generate the response now.`;
         }
 
-        function updatePreview() {
-            const txt = generatePrompt();
-            els.output.value = txt;
-            els.charCount.textContent = `${txt.length} chars`;
-        }
-
-        // --- 6. Init ---
         document.getElementById('copy-btn').addEventListener('click', () => {
             els.output.select();
             navigator.clipboard.writeText(els.output.value).then(() => {
@@ -385,10 +352,10 @@ Please think step-by-step and generate the response now.`;
             });
         });
 
-        // Start App
+        // Start
         renderTypes();
         renderCategories();
-        renderStyles(); // Ensure initial render
+        renderStyles();
         renderAudiences();
         updatePreview();
     </script>
