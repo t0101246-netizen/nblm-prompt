@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nbLM 風格指令生成器 v3.7</title>
+    <title>nbLM 風格指令生成器 v3.8</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -27,7 +27,7 @@
             <div class="flex justify-between h-16">
                 <div class="flex items-center gap-3">
                     <div class="bg-indigo-600 text-white px-3 py-1 rounded-lg font-bold text-xl tracking-tight">nbLM</div>
-                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令生成器 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.7 Official</span></h1>
+                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令生成器 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.8 Custom Brand</span></h1>
                 </div>
             </div>
         </div>
@@ -41,8 +41,7 @@
                 <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-indigo-500"></span> 1. 選擇輸出格式 (Format)
                 </h2>
-                <div class="grid grid-cols-2 gap-3" id="type-container">
-                    </div>
+                <div class="grid grid-cols-2 gap-3" id="type-container"></div>
             </section>
 
             <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 relative hover:border-indigo-300 transition-colors">
@@ -53,16 +52,14 @@
                 <div class="mb-4">
                     <label class="block text-sm font-semibold text-slate-700 mb-1.5">風格流派 (Genre)</label>
                     <div class="relative">
-                        <select id="category-select" class="w-full p-3 pl-4 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50 font-medium text-slate-700 transition cursor-pointer">
-                            </select>
+                        <select id="category-select" class="w-full p-3 pl-4 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50 font-medium text-slate-700 transition cursor-pointer"></select>
                     </div>
                 </div>
 
                 <div class="mb-5">
                     <label class="block text-sm font-semibold text-slate-700 mb-1.5">具體風格 (Specific Style)</label>
                     <div class="relative">
-                        <select id="style-select" class="w-full p-3 pl-4 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white font-medium text-slate-900 shadow-sm transition cursor-pointer">
-                            </select>
+                        <select id="style-select" class="w-full p-3 pl-4 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white font-medium text-slate-900 shadow-sm transition cursor-pointer"></select>
                     </div>
                 </div>
 
@@ -80,8 +77,7 @@
                 <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 3. 設定目標受眾 (Target)
                 </h2>
-                <div class="flex flex-wrap gap-2" id="audience-container">
-                    </div>
+                <div class="flex flex-wrap gap-2" id="audience-container"></div>
             </section>
 
         </div>
@@ -98,7 +94,7 @@
                         <span class="ml-3 text-slate-400 text-xs font-mono opacity-70">prompt_generator.md</span>
                     </div>
                     <button id="copy-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 shadow-lg shadow-indigo-500/20 active:scale-95">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                         <span id="copy-text">複製指令</span>
                     </button>
                 </div>
@@ -113,8 +109,37 @@
     </main>
 
     <script>
-        // --- 1. 完整資料庫 (47 Styles) ---
+        // --- 1. 完整資料庫 (含新增的 Corporate 類別) ---
         const styleDatabase = {
+            // ▼▼▼ 新增：企業與公部門客製化範本 ▼▼▼
+            "corporate": {
+                label: "🏛️ 企業/公部門範本 (Corporate)",
+                styles: [
+                    { 
+                        id: "tylin_taichung", 
+                        label: "政府工程簡報 (TYLIN/中捷風)", 
+                        desc: "包含專屬色票(#005596)、微軟正黑體、以及4種嚴格的版型視覺Prompt", 
+                        instr: `【Brand Guidelines: Colors & Typography】
+- Primary Blue: #005596 (頁首、強調)
+- Secondary Blue: #4F81BD (表格標題)
+- Accent Orange: #E36C09 (警示、重要日期)
+- Background: #FFFFFF
+- Footer: #E6E6E6 (城市剪影)
+- Typography: 微軟正黑體 (Title 24-28pt, Body 16-18pt, Table 12-14pt).
+
+【Slide Layout Instructions】
+Output the content, and append the EXACT English visual prompts below for the designer/generator based on the slide type:
+1. Cover Slide: "A professional presentation cover slide for a government engineering project. Left side features a large, curved deep blue abstract shape extending from top to bottom. The right side features a collage illustration style graphic containing a modern MRT train (blue line), Taichung city landmarks (Taichung Park Pavilion, National Theater), and silhouettes of people walking, connected by a blue line graph. Title text is centered-left, large, deep blue traditional Chinese characters."
+2. Agenda Slide: "A clean divider slide. Background contains a faded, watermark-style version of the MRT and city illustration from the cover. Foreground features large, bold numbers (01, 02, 03) inside dark blue circles or arrow shapes arranged vertically on the right side. Next to each number is the section title in large dark blue text. The layout is open and airy."
+3. Content Slide: "A structured content slide layout. Header: A top banner featuring a dark blue square on the far left containing the section number in white. Next to it, the slide title in large black bold text. On the far top right, the text 'TYLIN' with a thin blue underline. Footer: A continuous light grey silhouette of a city skyline spanning the entire bottom width. Body: White space reserved for data tables or bullet points."
+4. Table Style: "Professional data table style. Header row is deep blue (#005596) with white text. Data rows use alternating bands of white and very light grey (#F2F2F2) for readability. Borders are thin white lines. Text is centered vertically."
+
+【CRITICAL CONSTRAINT】
+絕對限制：產出的「實際簡報內文與標題」必須『完全不使用英文』(純繁體中文)！(註: 視覺描述的版型Prompt請保留原英文，但講稿與內文100%禁止英文)。` 
+                    }
+                ]
+            },
+            // ▲▲▲ 新增結束 ▲▲▲
             "business": {
                 label: "💼 商業與戰略 (Business)",
                 styles: [
@@ -214,7 +239,6 @@
             }
         };
 
-        // --- 2. 格式設定 (Types) ---
         const types = [
             { id: 'infographic', label: '資訊圖表 (Infographic)', icon: '📊', template: "Describe visual layout for charts. Provide: [Visual Concept], [Data Points], [Caption]." },
             { id: 'slide', label: '簡報大綱 (Slides)', icon: '📽️', template: "Outline 10-15 slides. For each: Title, Bullet Points, and Speaker Notes." }
@@ -229,8 +253,8 @@
 
         let state = {
             type: types[0],
-            category: 'business',
-            style: styleDatabase['business'].styles[0],
+            category: 'corporate', // 預設改為新的 Corporate 類別
+            style: styleDatabase['corporate'].styles[0],
             audience: audiences[0]
         };
 
@@ -308,15 +332,13 @@
             });
         }
 
-        // --- 3. 核心修正：v3.6 加入「長度分流 (Smart Split)」邏輯 ---
         function generatePrompt() {
-            // 定義針對「維多利亞」這類冗長風格的特別限制
             let formatOverrides = "";
             if (state.type.id === 'slide') {
                 formatOverrides = `
 ## Length Constraints (CRITICAL OVERRIDE)
 - **Slide Content (Visuals)**: You MUST be concise here. Max 10-15 words per bullet point. No paragraphs.
-- **Speaker Notes (Voice)**: Put all the "Style" and "Verbosity" here. If the style is Victorian, write the script for a Victorian gentleman in the notes, but keep the slide clean.
+- **Speaker Notes (Voice)**: Put all the "Style" and "Verbosity" here. Keep the main slide content clean.
 `;
             }
 
@@ -327,24 +349,24 @@ Please act as an expert Content Strategist. Your goal is to synthesize the provi
 - Who: ${state.audience.label}
 - Focus: ${state.audience.focus}
 
-## Style Guidelines
+## Style Guidelines & Branding
 - **Style**: ${state.style.label}
-- **Tone**: ${state.style.desc}
-- **Instructions**: ${state.style.instr}
-- **Language**: Traditional Chinese (繁體中文) for content.
+- **Description**: ${state.style.desc}
+- **Instructions**: 
+${state.style.instr}
 
 ${formatOverrides}
 
 ## Visual & Formatting Constraints
 - **BIG TEXT STRATEGY**: Use **# H1** and **## H2** headings.
-- **NO ASCII ART**: Do not attempt to draw charts.
-- **Data Format**: Use standard Markdown Tables.
+- **NO ASCII ART**: Do not attempt to draw charts. Use standard Markdown Tables for data.
 
 ## Output Instructions
 ${state.type.template}
 
-## Constraints
+## Global Constraints
 - **Source Based**: Strictly base your response on the provided sources in this notebook.
+- **Language**: MUST USE Traditional Chinese (繁體中文) ONLY for all generated content and titles. English is strictly forbidden in the final text (except for the prescribed visual prompts if requested above).
 - **Format**: Use clear Markdown formatting. 
 
 Please proceed step-by-step.`;
