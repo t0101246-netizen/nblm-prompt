@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nbLM 風格指令生成器 v3.8</title>
+    <title>nbLM 風格指令生成器 v4.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -27,7 +27,7 @@
             <div class="flex justify-between h-16">
                 <div class="flex items-center gap-3">
                     <div class="bg-indigo-600 text-white px-3 py-1 rounded-lg font-bold text-xl tracking-tight">nbLM</div>
-                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令生成器 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v3.8 Custom Brand</span></h1>
+                    <h1 class="text-lg md:text-xl font-bold text-slate-900">風格指令生成器 <span class="text-xs font-normal text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full ml-2">v4.0 Ultimate Arsenal</span></h1>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
                         <span class="ml-3 text-slate-400 text-xs font-mono opacity-70">prompt_generator.md</span>
                     </div>
                     <button id="copy-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 shadow-lg shadow-indigo-500/20 active:scale-95">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                         <span id="copy-text">複製指令</span>
                     </button>
                 </div>
@@ -109,45 +109,47 @@
     </main>
 
     <script>
-        // --- 1. 完整資料庫 (含新增的 Corporate 類別) ---
+        // --- 1. 終極資料庫 (近 80 款風格) ---
         const styleDatabase = {
-            // ▼▼▼ 新增：企業與公部門客製化範本 ▼▼▼
             "corporate": {
-                label: "🏛️ 企業/公部門範本 (Corporate)",
+                label: "🏛️ 企業與公部門 (Corporate)",
                 styles: [
                     { 
                         id: "tylin_taichung", 
                         label: "政府工程簡報 (TYLIN/中捷風)", 
                         desc: "包含專屬色票(#005596)、微軟正黑體、以及4種嚴格的版型視覺Prompt", 
-                        instr: `【Brand Guidelines: Colors & Typography】
-- Primary Blue: #005596 (頁首、強調)
-- Secondary Blue: #4F81BD (表格標題)
-- Accent Orange: #E36C09 (警示、重要日期)
-- Background: #FFFFFF
-- Footer: #E6E6E6 (城市剪影)
-- Typography: 微軟正黑體 (Title 24-28pt, Body 16-18pt, Table 12-14pt).
-
-【Slide Layout Instructions】
-Output the content, and append the EXACT English visual prompts below for the designer/generator based on the slide type:
-1. Cover Slide: "A professional presentation cover slide for a government engineering project. Left side features a large, curved deep blue abstract shape extending from top to bottom. The right side features a collage illustration style graphic containing a modern MRT train (blue line), Taichung city landmarks (Taichung Park Pavilion, National Theater), and silhouettes of people walking, connected by a blue line graph. Title text is centered-left, large, deep blue traditional Chinese characters."
-2. Agenda Slide: "A clean divider slide. Background contains a faded, watermark-style version of the MRT and city illustration from the cover. Foreground features large, bold numbers (01, 02, 03) inside dark blue circles or arrow shapes arranged vertically on the right side. Next to each number is the section title in large dark blue text. The layout is open and airy."
-3. Content Slide: "A structured content slide layout. Header: A top banner featuring a dark blue square on the far left containing the section number in white. Next to it, the slide title in large black bold text. On the far top right, the text 'TYLIN' with a thin blue underline. Footer: A continuous light grey silhouette of a city skyline spanning the entire bottom width. Body: White space reserved for data tables or bullet points."
-4. Table Style: "Professional data table style. Header row is deep blue (#005596) with white text. Data rows use alternating bands of white and very light grey (#F2F2F2) for readability. Borders are thin white lines. Text is centered vertically."
-
-【CRITICAL CONSTRAINT】
-絕對限制：產出的「實際簡報內文與標題」必須『完全不使用英文』(純繁體中文)！(註: 視覺描述的版型Prompt請保留原英文，但講稿與內文100%禁止英文)。` 
+                        instr: `【Brand Guidelines: Colors & Typography】\n- Primary Blue: #005596 (頁首、強調)\n- Secondary Blue: #4F81BD (表格標題)\n- Accent Orange: #E36C09 (警示、重要日期)\n- Background: #FFFFFF\n- Footer: #E6E6E6 (城市剪影)\n- Typography: 微軟正黑體 (Title 24-28pt, Body 16-18pt, Table 12-14pt).\n\n【Slide Layout Instructions】\nOutput the content, and append the EXACT English visual prompts below for the designer/generator based on the slide type:\n1. Cover Slide: "A professional presentation cover slide for a government engineering project. Left side features a large, curved deep blue abstract shape extending from top to bottom. The right side features a collage illustration style graphic containing a modern MRT train (blue line), Taichung city landmarks (Taichung Park Pavilion, National Theater), and silhouettes of people walking, connected by a blue line graph. Title text is centered-left, large, deep blue traditional Chinese characters."\n2. Agenda Slide: "A clean divider slide. Background contains a faded, watermark-style version of the MRT and city illustration from the cover. Foreground features large, bold numbers (01, 02, 03) inside dark blue circles or arrow shapes arranged vertically on the right side. Next to each number is the section title in large dark blue text. The layout is open and airy."\n3. Content Slide: "A structured content slide layout. Header: A top banner featuring a dark blue square on the far left containing the section number in white. Next to it, the slide title in large black bold text. On the far top right, the text 'TYLIN' with a thin blue underline. Footer: A continuous light grey silhouette of a city skyline spanning the entire bottom width. Body: White space reserved for data tables or bullet points."\n4. Table Style: "Professional data table style. Header row is deep blue (#005596) with white text. Data rows use alternating bands of white and very light grey (#F2F2F2) for readability. Borders are thin white lines. Text is centered vertically."\n\n【CRITICAL CONSTRAINT】\n絕對限制：產出的「實際簡報內文與標題」必須『完全不使用英文』(純繁體中文)！(註: 視覺描述的版型Prompt請保留原英文，但講稿與內文100%禁止英文)。` 
                     }
                 ]
             },
-            // ▲▲▲ 新增結束 ▲▲▲
+            "project": {
+                label: "🏗️ 專案與系統工程 (Project)",
+                styles: [
+                    { id: "cpm", label: "要徑精算師 (Critical Path)", desc: "尋找零浮時節點、連鎖反應", instr: "Analyze through a 'Project Control Logic' framework. Identify the 'Critical Path' (tasks with zero float). Emphasize dependencies, structural load, and the chain reaction of any delays." },
+                    { id: "pseudo", label: "虛擬代碼 (Pseudocode)", desc: "IF/ELSE邏輯、工程師交接", instr: "Break down the logic into Developer Pseudocode. Use IF/THEN/ELSE statements, FOR loops, and variable declarations to explain the processes." },
+                    { id: "systems", label: "系統思考家 (Systems Thinker)", desc: "回饋迴圈、飛輪效應", instr: "Focus on feedback loops, bottlenecks, and unintended consequences. Look at the whole system rather than isolated parts. Use terms like 'reinforcing loops' and 'systemic delays'." },
+                    { id: "agile", label: "敏捷產品經理 (Agile PM)", desc: "User Story、痛點、驗收標準", instr: "Focus on User Stories ('As a user...'). Define 'Acceptance Criteria'. Prioritize 'Pain Points' and 'Solutions'. Tone: Iterative, user-centric, and practical." }
+                ]
+            },
             "business": {
                 label: "💼 商業與戰略 (Business)",
                 styles: [
                     { id: "mckinsey", label: "麥肯錫顧問 (McKinsey)", desc: "MECE原則、極度客觀、戰略導向", instr: "Use MECE (Mutually Exclusive, Collectively Exhaustive) principle. Tone: Highly professional, objective, and executive. Use phrases like 'Strategic Implications', 'Key Drivers', and 'Actionable Insights'." },
                     { id: "vc", label: "矽谷創投 (VC)", desc: "重視成長、ROI、市場規模", instr: "Focus on 'Scalability', 'Moat', 'Traction', and 'ROI'. Tone: Fast-paced, sharp, assessing growth potential. Highlight 'Unfair Advantages' and 'Market Size'." },
                     { id: "legal", label: "法律合規 (Legal)", desc: "嚴謹、無歧義、定義清晰", instr: "Tone: Rigorous, unambiguous, and formal. Use precise definitions. Structure arguments with 'Premise', 'Evidence', and 'Conclusion'. Avoid vague language." },
-                    { id: "agile", label: "敏捷產品經理 (PM)", desc: "User Story、痛點、驗收標準", instr: "Focus on User Stories ('As a user...'). Define 'Acceptance Criteria'. Prioritize 'Pain Points' and 'Solutions'. Tone: Iterative, user-centric, and practical." },
-                    { id: "crisis", label: "危機公關 (Crisis Comms)", desc: "誠懇、事實澄清、後續行動", instr: "Tone: Empathetic but controlled. Focus on 'Fact Clarification', 'Immediate Actions', and 'Future Prevention'. Reassure stakeholders without over-promising." }
+                    { id: "crisis", label: "危機公關 (Crisis Comms)", desc: "誠懇、事實澄清、後續行動", instr: "Tone: Empathetic but controlled. Focus on 'Fact Clarification', 'Immediate Actions', and 'Future Prevention'. Reassure stakeholders without over-promising." },
+                    { id: "pr", label: "公關發言人 (Press Release)", desc: "倒金字塔結構、官方聲明", instr: "Format as an official Press Release. Start with 'FOR IMMEDIATE RELEASE'. Use inverted pyramid structure (most important info first). Include an enthusiastic 'quote' from an executive." },
+                    { id: "audit", label: "四大會計師 (Audit & Risk)", desc: "極度挑剔、風險評估", instr: "Tone: Highly skeptical, risk-averse, auditing style. Actively look for inconsistencies, missing data, and financial/logical risks in the source. Highlight 'Red Flags'." }
+                ]
+            },
+            "insight": {
+                label: "🕵️‍♂️ 深度洞察與推演 (Insight)",
+                styles: [
+                    { id: "cia", label: "情報分析官 (CIA Analyst)", desc: "機密檔案、信心水準", instr: "Tone: Objective, clinical, classified briefing. Assign confidence levels (High/Medium/Low) to claims. Identify 'Threats', 'Assets', and strategic blind spots." },
+                    { id: "behavioral", label: "行為經濟學家 (Behavioral)", desc: "人性偏誤、推力", instr: "Analyze the data through the lens of human psychology. Focus on cognitive biases, incentives, loss aversion, and 'nudges' that drive decision-making." },
+                    { id: "true_crime", label: "真實犯罪播客 (True Crime)", desc: "懸疑解謎、還原動機", instr: "Tone: Suspenseful, investigative. Piece together the timeline like a mystery. Focus on 'motives', 'evidence', and the turning point where things went wrong." },
+                    { id: "lawyer", label: "法庭辯護律師 (Lawyer)", desc: "呈堂證供、極具說服力", instr: "Present the data as 'Exhibits' in a trial. Address the audience as the 'Jury'. Build a bulletproof case leading to a compelling closing argument." },
+                    { id: "sherlock", label: "福爾摩斯 (Sherlock)", desc: "演繹推理、見微知著", instr: "Tone: Brilliant, slightly arrogant detective. Use deductive reasoning. Point out minor details in the data and draw grand conclusions. Use phrases like 'Elementary' or 'The game is afoot'." }
                 ]
             },
             "visual": {
@@ -161,48 +163,46 @@ Output the content, and append the EXACT English visual prompts below for the de
                 ]
             },
             "academic": {
-                label: "🎓 學術與教育 (Academic)",
+                label: "🎓 學術與教育 (Education)",
                 styles: [
                     { id: "ivy", label: "常春藤教授 (Ivy League)", desc: "引用嚴謹、深度批判", instr: "Tone: Scholarly, rigorous, critical. Use complex sentence structures. Require citations for claims. Analyze from multiple theoretical perspectives." },
                     { id: "eli5", label: "費曼技巧 (ELI5)", desc: "極簡比喻、無術語", instr: "Explain Like I'm 5. Use simple analogies (Lego, Pizza, Cars). BANNED: Jargon and complex acronyms. Focus on the core 'Why'." },
                     { id: "socratic", label: "蘇格拉底 (Socratic)", desc: "提問引導、反思", instr: "Do not give direct answers. Use guiding questions to lead the reader to the conclusion. Foster critical thinking and self-discovery." },
                     { id: "debater", label: "辯論選手 (Debater)", desc: "正反並陳、邏輯攻防", instr: "Structure: Argument, Rebuttal, Evidence. Present 'Pros' and 'Cons' sharply. Focus on logical fallacies and strong counter-arguments." },
-                    { id: "history", label: "歷史說書人 (Historian)", desc: "時間軸、因果、故事性", instr: "Narrate chronologically. Emphasize 'Cause and Effect'. Place data in a historical context. Tell the 'Story' behind the numbers." }
+                    { id: "history", label: "歷史說書人 (Historian)", desc: "時間軸、因果、故事性", instr: "Narrate chronologically. Emphasize 'Cause and Effect'. Place data in a historical context. Tell the 'Story' behind the numbers." },
+                    { id: "montessori", label: "蒙特梭利導師 (Montessori)", desc: "引導發現、鼓勵性", instr: "Tone: Gentle, encouraging, discovery-based. Don't just give answers; create a framework where the reader feels they are discovering the insights themselves." },
+                    { id: "drill", label: "魔鬼教練 (Drill Sergeant)", desc: "高壓指令、立刻行動", instr: "Tone: High energy, loud, demanding, no-excuses. Command the reader to take immediate action based on the data. Use short, sharp directives." },
+                    { id: "wiki", label: "維基百科編者 (Wikipedia)", desc: "絕對中立、百科全書", instr: "Strict Neutral Point of View (NPOV). Highly encyclopedic, objective, and structured. Categorize into Overview, History, Mechanisms, and Criticisms." }
                 ]
             },
             "media": {
                 label: "📢 媒體與傳播 (Media)",
                 styles: [
                     { id: "ted", label: "TED 演講 (TED Talk)", desc: "啟發性、個人故事、金句", instr: "Structure: The Hook -> The Struggle -> The Epiphany. Tone: Inspiring, passionate. Include 'Quotable Moments' and a strong 'Call to Adventure'." },
+                    { id: "jobs", label: "賈伯斯發布會 (Steve Jobs)", desc: "現實扭曲力場、極簡震撼", instr: "Tone: Visionary, minimalist, revolutionary. Frame the solution as magical and changing the world. Use the phrase 'One more thing...'. Emphasize the intersection of technology and liberal arts." },
                     { id: "techcrunch", label: "科技媒體 (TechCrunch)", desc: "趨勢、商業邏輯、Geeky", instr: "Focus on 'Disruption', 'Tech Stack', and 'Market fit'. Tone: Modern, geeky, analytical. specific to the tech industry ecosystem." },
                     { id: "viral", label: "病毒行銷 (Viral)", desc: "情緒渲染、驚嘆號", instr: "Use 'Clickbait' style headers. High emotional engagement. Short, punchy sentences. Use formatting like BOLD CAPS for emphasis." },
                     { id: "noir", label: "黑色偵探 (Noir)", desc: "冷硬、獨白、調查感", instr: "Tone: Cynical, gritty, monochromatic. Write like a detective's monologue. 'It was a rainy night when the data came in...' Uncover the 'Truth'." },
-                    { id: "podcast", label: "Podcast 腳本", desc: "口語化、對話感", instr: "Format as a script. Include cues like [Music Fades In], [Laughter]. Tone: Conversational, casual, engaging audio-first storytelling." }
+                    { id: "podcast", label: "Podcast 腳本", desc: "口語化、對話感", instr: "Format as a script. Include cues like [Music Fades In], [Laughter]. Tone: Conversational, casual, engaging audio-first storytelling." },
+                    { id: "late_night", label: "深夜脫口秀 (Late Night)", desc: "諷刺幽默、單口喜劇", instr: "Tone: Satirical, energetic, comedic monologue. Setup a premise based on the data and deliver a punchline. Add cues like [Audience Laughs] or [Adjusts Tie]." }
                 ]
             },
-            "data": {
-                label: "📊 數據與邏輯 (Data)",
+            "persona": {
+                label: "🎭 角色與語氣 (Personas)",
                 styles: [
-                    { id: "json", label: "JSON 結構", desc: "程式碼、Key-Value", instr: "Output strictly in JSON format. Use clear Key-Value pairs. No conversational filler. Ideal for data parsing." },
-                    { id: "swot", label: "SWOT 分析", desc: "優劣勢矩陣", instr: "Strictly categorize into: Strengths (Internal), Weaknesses (Internal), Opportunities (External), Threats (External). Bullet points only." },
-                    { id: "gamestats", label: "遊戲數值 (Game Stats)", desc: "屬性化、等級制", instr: "Quantify data as 'Attributes' (e.g., Agility, Intelligence). Assign 'Levels' or 'Ranks' to concepts. Use RPG UI terminology." },
-                    { id: "checklist", label: "清單控 (Checklist)", desc: "SOP、複選框", instr: "Format as a checklist [ ]. Break down complex tasks into single steps. Focus on 'Actionability'. No theory, just doing." },
-                    { id: "matrix", label: "比較矩陣 (Matrix)", desc: "橫縱軸對比", instr: "Create a Markdown table. Columns: Competitors/Options. Rows: Features/Specs. Highlight differences clearly." }
-                ]
-            },
-            "game": {
-                label: "🎮 遊戲與互動 (Gaming)",
-                styles: [
-                    { id: "dm", label: "地下城主 (D&D DM)", desc: "冒險敘事、第二人稱", instr: "Role: Dungeon Master. Describe challenges as 'Monsters'. Describe resources as 'Loot'. Use second-person ('You enter the room...')." },
-                    { id: "rpg_item", label: "RPG 裝備 (Item Desc)", desc: "傳奇物品說明", instr: "Format as a Legendary Item tooltip. Include: Name, Type, Stats, Passive Effects, and Lore Text (flavor text)." },
-                    { id: "cyoa", label: "互動小說 (CYOA)", desc: "提供選項 A/B/C", instr: "Do not finish the story. Present a scenario based on data, then offer 3 distinct choices (Option A, B, C) leading to different outcomes." },
-                    { id: "patch", label: "更新公告 (Patch Notes)", desc: "Buff/Nerf、修復", instr: "Use terms: 'Buffed', 'Nerfed', 'Bug Fixes', 'QoL Improvements'. Tone: Dev-blog style, concise and technical." },
-                    { id: "esports", label: "電競賽評 (Caster)", desc: "高能量、關鍵Play", instr: "Tone: High energy, shouting, hype! Highlight 'MVP' moments and 'Critical Plays' in the data. Fast-paced delivery." }
+                    { id: "ramsay", label: "地獄廚神 (Gordon Ramsay)", desc: "毒舌挑剔、尋找漏洞", instr: "Tone: Extremely critical, demanding perfection, abrasive but passionate. Use culinary metaphors to tear apart weak arguments and praise only the absolute best data points." },
+                    { id: "pilot", label: "機長廣播 (Pilot)", desc: "航空隱喻、安定人心", instr: "Use airline metaphors. 'Welcome aboard Flight Q3...' Outline the 'destination' (goals), potential 'turbulence' (risks), and 'safety procedures' (protocols). Tone: Reassuring and professional." },
+                    { id: "therapist", label: "心理諮商師 (Therapist)", desc: "極致同理、關注情緒", instr: "Tone: Deeply empathetic, validating, calm. Focus on the human element, underlying emotions, and path to healing or resolution among stakeholders." },
+                    { id: "time_traveler", label: "時空旅人 (Time Traveler)", desc: "史詩回顧、百年後視角", instr: "Speak as a historian from 100 years in the future looking back at this data. Describe how these current events or decisions shaped the future of humanity." },
+                    { id: "victorian", label: "維多利亞紳士 (Victorian)", desc: "優雅、冗長、古典", instr: "Tone: 19th Century Aristocrat. Use archaic words ('My dearest', 'Indeed', 'Preposterous'). Be polite but excessively verbose." },
+                    { id: "genz", label: "Z世代 (Gen Z)", desc: "流行語、Emoji、短句", instr: "Tone: Internet slang (no cap, bet, sus). Use lowercase. Use emojis liberally 💀🔥. Keep it short and chaotic." }
                 ]
             },
             "metaphor": {
-                label: "🧩 隱喻與遷移 (Metaphor)",
+                label: "🧩 隱喻與跨域 (Metaphor)",
                 styles: [
+                    { id: "wuxia", label: "武俠大師 (Wuxia Novel)", desc: "門派恩怨、武功秘笈", instr: "Metaphor: Traditional Chinese Martial Arts (Wuxia). Describe competitors as rival sects (門派). Describe strategies as secret martial arts techniques (武功秘笈) and internal chi (內功)." },
+                    { id: "captain_log", label: "星際艦長日誌 (Captain's Log)", desc: "科幻探索、冷靜紀錄", instr: "Format: Sci-Fi Starship Captain's Log. Start with 'Stardate...'. Describe the workplace as a starship, challenges as alien anomalies, and the team as the crew. Tone: Calm under pressure." },
                     { id: "chef", label: "米其林主廚 (Chef)", desc: "食譜、食材、烹飪", instr: "Metaphor: Cooking. Data = Ingredients. Process = Recipe. Outcome = Dish. Use sensory words (Taste, Smell, Texture)." },
                     { id: "medical", label: "臨床診斷 (Medical)", desc: "症狀、處方、預後", instr: "Format: Symptoms (Current State), Diagnosis (Root Cause), Prescription (Action), Prognosis (Future). Tone: Sterile, clinical." },
                     { id: "blueprint_arch", label: "建築師 (Architect)", desc: "空間、動線、材質", instr: "Focus on 'Space', 'Flow', and 'Materials'. Describe the information architecture as a physical building." },
@@ -210,31 +210,53 @@ Output the content, and append the EXACT English visual prompts below for the de
                     { id: "script", label: "電影劇本 (Screenplay)", desc: "場景、動作、對白", instr: "Format: EXT. LOCATION - DAY. Describe action lines and dialogue. Think cinematically." }
                 ]
             },
-            "persona": {
-                label: "🎭 角色與語氣 (Persona)",
+            "game": {
+                label: "🎮 遊戲與互動 (Gaming)",
                 styles: [
-                    { id: "victorian", label: "維多利亞紳士", desc: "優雅、冗長、古典", instr: "Tone: 19th Century Aristocrat. Use archaic words ('My dearest', 'Indeed', 'Preposterous'). Be polite but excessively verbose." },
-                    { id: "genz", label: "Z世代 (Gen Z)", desc: "流行語、Emoji、短句", instr: "Tone: Internet slang (no cap, bet, sus). Use lowercase. Use emojis liberally 💀🔥. Keep it short and chaotic." }
+                    { id: "quest", label: "任務面板 (Quest UI)", desc: "主線支線、獎勵機制", instr: "Format as a Video Game Quest log. Include: [Quest Name], [Lore/Background], [Main Objectives], [Side Quests], and [Loot/Rewards for completion]." },
+                    { id: "dm", label: "地下城主 (D&D DM)", desc: "冒險敘事、第二人稱", instr: "Role: Dungeon Master. Describe challenges as 'Monsters'. Describe resources as 'Loot'. Use second-person ('You enter the room...')." },
+                    { id: "rpg_item", label: "RPG 裝備 (Item Desc)", desc: "傳奇物品說明", instr: "Format as a Legendary Item tooltip. Include: Name, Type, Stats, Passive Effects, and Lore Text (flavor text)." },
+                    { id: "cyoa", label: "互動小說 (CYOA)", desc: "提供選項 A/B/C", instr: "Do not finish the story. Present a scenario based on data, then offer 3 distinct choices (Option A, B, C) leading to different outcomes." },
+                    { id: "patch", label: "更新公告 (Patch Notes)", desc: "Buff/Nerf、修復", instr: "Use terms: 'Buffed', 'Nerfed', 'Bug Fixes', 'QoL Improvements'. Tone: Dev-blog style, concise and technical." },
+                    { id: "esports", label: "電競賽評 (Caster)", desc: "高能量、關鍵Play", instr: "Tone: High energy, shouting, hype! Highlight 'MVP' moments and 'Critical Plays' in the data. Fast-paced delivery." }
                 ]
             },
-            "visual_gen": {
-                label: "👁️ 視覺生成專用 (Prompting)",
+            "data": {
+                label: "📊 數據與結構邏輯 (Data)",
                 styles: [
-                    { id: "wes", label: "魏斯安德森 (Wes Anderson)", desc: "對稱、粉嫩色、置中", instr: "Visual Description: Symmetrical composition, pastel color palette, flat lay, quirky objects, centered framing." },
-                    { id: "ukiyo", label: "浮世繪 (Ukiyo-e)", desc: "版畫、線條、海浪", instr: "Visual Description: Woodblock print style, bold outlines, flat perspective, nature motifs (waves, mountains)." },
-                    { id: "pixel", label: "像素藝術 (8-bit)", desc: "復古遊戲、低解析", instr: "Visual Description: Low resolution, limited color palette, blocky shapes, retro video game aesthetic." },
-                    { id: "dataism", label: "數據主義 (Dataism)", desc: "代碼流、駭客任務", instr: "Visual Description: Glowing green code, digital rain, network nodes, dark background, abstract data visualization." },
-                    { id: "paper", label: "剪紙藝術 (Paper Cut)", desc: "層次、陰影、質感", instr: "Visual Description: Layered colored paper, deep shadows, 3D depth, physical texture, craft aesthetic." }
+                    { id: "mindmap", label: "心智圖代碼 (MindMap)", desc: "嚴格縮排、無廢話", instr: "Output ONLY in strictly nested Markdown bullet points. No introductory text. Designed to be directly copy-pasted into XMind or Notion to generate a Mind Map. Ensure logical hierarchy." },
+                    { id: "git", label: "Git 提交紀錄 (Git Log)", desc: "極致簡潔、哈湊碼", instr: "Format as a Git commit log. Use chronological order, hash strings, and imperative mood (e.g., 'Fix issue with...', 'Add feature for...'). Extremely concise." },
+                    { id: "json", label: "JSON 結構", desc: "程式碼、Key-Value", instr: "Output strictly in JSON format. Use clear Key-Value pairs. No conversational filler. Ideal for data parsing." },
+                    { id: "swot", label: "SWOT 分析", desc: "優劣勢矩陣", instr: "Strictly categorize into: Strengths (Internal), Weaknesses (Internal), Opportunities (External), Threats (External). Bullet points only." },
+                    { id: "gamestats", label: "遊戲數值 (Game Stats)", desc: "屬性化、等級制", instr: "Quantify data as 'Attributes' (e.g., Agility, Intelligence). Assign 'Levels' or 'Ranks' to concepts. Use RPG UI terminology." },
+                    { id: "checklist", label: "清單控 (Checklist)", desc: "SOP、複選框", instr: "Format as a checklist [ ]. Break down complex tasks into single steps. Focus on 'Actionability'. No theory, just doing." },
+                    { id: "matrix", label: "比較矩陣 (Matrix)", desc: "橫縱軸對比", instr: "Create a Markdown table. Columns: Competitors/Options. Rows: Features/Specs. Highlight differences clearly." }
                 ]
             },
             "constraint": {
-                label: "📐 結構限制 (Structural)",
+                label: "📐 特殊限制與格式 (Constraints)",
                 styles: [
+                    { id: "ikea", label: "IKEA 說明書 (IKEA Manual)", desc: "防呆步驟、簡單動詞", instr: "Extreme simplicity. Break processes into visual-friendly, foolproof steps. Use simple verbs. Avoid any complex jargon. Imagine writing for someone who doesn't speak the language." },
+                    { id: "comic", label: "美漫分鏡腳本 (Comic Script)", desc: "場景、音效、對白", instr: "Format as a Comic Script. Panel 1, Panel 2, etc. For each panel provide: [Setting/Action], [SFX/Sound], [Character Dialogue]. Think visually and sequentially." },
+                    { id: "fortune", label: "幸運餅乾 (Fortune Cookie)", desc: "單句哲理、深刻箴言", instr: "Distill the absolute core message into a single, cryptic, philosophical, and memorable one-liner, like a fortune cookie message." },
+                    { id: "5w1h", label: "5W1H 新聞體 (5W1H)", desc: "人事物地為何、精準無水份", instr: "Strict journalistic structure. Answer exactly: Who, What, When, Where, Why, and How. Provide only verified facts from the source. Zero fluff." },
+                    { id: "tarot", label: "塔羅牌陣 (Tarot Reading)", desc: "過去現在未來、隱喻解牌", instr: "Format as a 3-card Tarot reading (Past, Present, Future). Assign a metaphorical Tarot card to key data points and interpret the 'reading' based on the logic of the source." },
                     { id: "haiku", label: "俳句 (Haiku)", desc: "5-7-5 音節", instr: "Strict Constraint: Summarize key points using only Haiku structure (5-7-5 syllables). Abstract and poetic." },
                     { id: "amazon", label: "亞馬遜六頁 (6-Pager)", desc: "純文字敘事、無條列", instr: "Strict Constraint: Continuous narrative text only. NO bullet points. Focus on clear, full sentences and logical flow." },
                     { id: "flashcard", label: "記憶卡片 (Flashcards)", desc: "問與答", instr: "Format: Q: [Question] \n A: [Answer]. optimized for spaced repetition learning." },
                     { id: "thread", label: "推特串 (Twitter)", desc: "10條推文、280字", instr: "Format: A thread of 10 tweets. Each under 280 chars. Number them 1/10. Start with a Hook, end with a CTA." },
                     { id: "faq", label: "常見問答 (FAQ)", desc: "預判問題、同理回答", instr: "Anticipate user confusion. Format as 'User Asks' and 'Expert Answers'. Focus on resolving doubts." }
+                ]
+            },
+            "visual_gen": {
+                label: "👁️ 視覺生成專用 (Prompting)",
+                styles: [
+                    { id: "meta_prompt", label: "AI 提示詞工程師 (Meta)", desc: "萃取精華轉化為畫圖指令", instr: "Do not summarize the text directly. Instead, extract the visual and conceptual essence and output 5 highly optimized Midjourney/DALL-E prompts based on this data." },
+                    { id: "wes", label: "魏斯安德森 (Wes Anderson)", desc: "對稱、粉嫩色、置中", instr: "Visual Description: Symmetrical composition, pastel color palette, flat lay, quirky objects, centered framing." },
+                    { id: "ukiyo", label: "浮世繪 (Ukiyo-e)", desc: "版畫、線條、海浪", instr: "Visual Description: Woodblock print style, bold outlines, flat perspective, nature motifs (waves, mountains)." },
+                    { id: "pixel", label: "像素藝術 (8-bit)", desc: "復古遊戲、低解析", instr: "Visual Description: Low resolution, limited color palette, blocky shapes, retro video game aesthetic." },
+                    { id: "dataism", label: "數據主義 (Dataism)", desc: "代碼流、駭客任務", instr: "Visual Description: Glowing green code, digital rain, network nodes, dark background, abstract data visualization." },
+                    { id: "paper", label: "剪紙藝術 (Paper Cut)", desc: "層次、陰影、質感", instr: "Visual Description: Layered colored paper, deep shadows, 3D depth, physical texture, craft aesthetic." }
                 ]
             }
         };
@@ -253,7 +275,7 @@ Output the content, and append the EXACT English visual prompts below for the de
 
         let state = {
             type: types[0],
-            category: 'corporate', // 預設改為新的 Corporate 類別
+            category: 'corporate', 
             style: styleDatabase['corporate'].styles[0],
             audience: audiences[0]
         };
